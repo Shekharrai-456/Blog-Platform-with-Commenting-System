@@ -7,7 +7,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "role"]
+        fields = ["id", "username", "password"]
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "password", "role"]  # Removed email for simplicity
+        fields = ["username", "password", "role"]  
         extra_kwargs = {
             "role": {"default": "reader"}  # Default role is reader
         }

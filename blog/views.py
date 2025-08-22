@@ -38,21 +38,21 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    """
-    - Anyone can list/read posts
-    - Only role='author' can create posts
-    - Only the post owner can update/delete
-    - Search: title, content, category name, tags name, author username
-    - Filter: category, tags, status, author__username, created_at (gte/lte/date)
-      Examples:
-        ?category=1
-        ?tags=2        (exact tag id)
-        ?status=P
-        ?author__username=alice
-        ?created_at__date=2025-08-20
-        ?created_at__gte=2025-08-01&created_at__lte=2025-08-20
-    - Ordering: ?ordering=-created_at or ?ordering=title
-    """
+    # """
+    # - Anyone can list/read posts
+    # - Only role='author' can create posts
+    # - Only the post owner can update/delete
+    # - Search: title, content, category name, tags name, author username
+    # - Filter: category, tags, status, author__username, created_at (gte/lte/date)
+    #   Examples:
+    #     ?category=1
+    #     ?tags=2        (exact tag id)
+    #     ?status=P
+    #     ?author__username=alice
+    #     ?created_at__date=2025-08-20
+    #     ?created_at__gte=2025-08-01&created_at__lte=2025-08-20
+    # - Ordering: ?ordering=-created_at or ?ordering=title
+    # """
     queryset = Post.objects.select_related("author", "category").prefetch_related("tags").all().order_by("-created_at")
     serializer_class = PostSerializer
 
