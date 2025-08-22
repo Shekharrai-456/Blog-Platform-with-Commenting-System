@@ -15,6 +15,16 @@ class TagSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source="author.username")
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field="name"
+    )
+    
+    tags = serializers.SlugRelatedField(
+        queryset=Tag.objects.all(),
+        slug_field="name",
+        many=True
+    )
     category_name = serializers.ReadOnlyField(source="category.name")
 
     class Meta:
