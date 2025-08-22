@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from .models import Category, Tag, Post, Comment
 
+"""
+    Serializer for the Category model.
+    Fields:
+        - id: Primary key of the category
+        - name: Name of the category
+"""
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

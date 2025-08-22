@@ -7,6 +7,13 @@ from .permissions import IsOwnerOrReadOnly, IsAuthorRole
 
 # Create your views here.
 
+"""
+API endpoint for categories:
+- List & retrieve: anyone
+- Create: only authors
+- Update/Delete: only owner or admin
+- Search by category name
+"""
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by("name")
     serializer_class = CategorySerializer
@@ -15,12 +22,20 @@ class CategoryViewSet(viewsets.ModelViewSet):
     search_fields = ["name"]
     
     def get_permissions(self):
+        #Assign permissions based on action type
         if self.action == "create":
             return [IsAuthenticatedOrReadOnly(), IsAuthorRole()]  # authors only
         elif self.action in ["update", "partial_update", "destroy"]:
             return [IsAuthenticatedOrReadOnly(), IsOwnerOrReadOnly()]  # owner/admin
         return [IsAuthenticatedOrReadOnly()]
 
+"""
+API endpoint for tags:
+- List & retrieve: anyone
+- Create: only authors
+- Update/Delete: only owner or admin
+- Search by tag name
+"""
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all().order_by("name")
@@ -30,6 +45,7 @@ class TagViewSet(viewsets.ModelViewSet):
     search_fields = ["name"]
     
     def get_permissions(self):
+        #Assign permissions based on action type
         if self.action == "create":
             return [IsAuthenticatedOrReadOnly(), IsAuthorRole()]  # authors only
         elif self.action in ["update", "partial_update", "destroy"]:
@@ -37,22 +53,16 @@ class TagViewSet(viewsets.ModelViewSet):
         return [IsAuthenticatedOrReadOnly()]
 
 
+"""
+API endpoint for blog posts:
+- List & retrieve: anyone
+- Create: authors only
+- Update/Delete: only owner
+- Filter by category, tags, status, author, created_at
+- Search by title, content, category name, tag name, author username
+- Ordering by created_at or title
+"""
 class PostViewSet(viewsets.ModelViewSet):
-    # """
-    # - Anyone can list/read posts
-    # - Only role='author' can create posts
-    # - Only the post owner can update/delete
-    # - Search: title, content, category name, tags name, author username
-    # - Filter: category, tags, status, author__username, created_at (gte/lte/date)
-    #   Examples:
-    #     ?category=1
-    #     ?tags=2        (exact tag id)
-    #     ?status=P
-    #     ?author__username=alice
-    #     ?created_at__date=2025-08-20
-    #     ?created_at__gte=2025-08-01&created_at__lte=2025-08-20
-    # - Ordering: ?ordering=-created_at or ?ordering=title
-    # """
     queryset = Post.objects.select_related("author", "category").prefetch_related("tags").all().order_by("-created_at")
     serializer_class = PostSerializer
 
@@ -85,15 +95,17 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
+"""
+API endpoint for comments:
+- List & retrieve: anyone
+- Create: any authenticated user
+- Update/Delete: only owner
+- Filter by post, author, created_at
+- Search by content or author username
+- Ordering by created_at
+"""
 class CommentViewSet(viewsets.ModelViewSet):
-    """
-    - Anyone can list/read comments
-    - Any authenticated user (reader/author) can create a comment
-    - Only the comment owner can update/delete
-    - Search: content, author username
-    - Filter: post, author__username, created_at
-    - Ordering: created_at
-    """
+    
     queryset = Comment.objects.select_related("post", "author").all().order_by("-created_at")
     serializer_class = CommentSerializer
 
