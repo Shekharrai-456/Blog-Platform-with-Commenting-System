@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from debug_toolbar.toolbar import debug_toolbar_urls
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(),name ="schema"),
@@ -34,4 +36,7 @@ urlpatterns = [
     # Optional: DRF’s browsable API login/logout (session-based auth)
     # You’ll mainly use token authentication, but this helps when testing in the browser.
     path("api/auth/", include("rest_framework.urls")),
-]
+] 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
