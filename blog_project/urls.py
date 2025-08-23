@@ -31,11 +31,8 @@ urlpatterns = [
     path("api/blog/", include("blog.urls")),
 
     # User app endpoints (register, login, profile, etc.)
-    path("api/user/", include("user.urls")),
+    path("auth/", include("user.urls")),
 
-    # Optional: DRF’s browsable API login/logout (session-based auth)
-    # You’ll mainly use token authentication, but this helps when testing in the browser.
-    path("api/auth/", include("rest_framework.urls")),
 ] 
 if settings.DEBUG:
     import debug_toolbar

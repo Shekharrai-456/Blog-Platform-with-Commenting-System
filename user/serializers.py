@@ -10,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username","password"]
         
 
-
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,min_length=4)
 
